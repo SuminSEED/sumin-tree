@@ -1,7 +1,7 @@
 {
     "name": "sumin-tree",
     "description": "Tree with filter, map, forEach, toArray, some, every, find, etc.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "babel": {
         "presets": [
             "env"
