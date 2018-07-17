@@ -12,10 +12,9 @@ class SuminTree<T> {
         if (value instanceof SuminTree) {
             this._value = value._value;
             this._children = [];
-            for (let i = 0; i < value._children.length; i++) {
-                let child = value._children[i];
+            value._children.forEach(child => {
                 this.add(child, false, SuminTree.CHILD_INSERT_POSITION.TAIL);
-            }
+            });
         } else {
             this.value = value;
             this._children = [];

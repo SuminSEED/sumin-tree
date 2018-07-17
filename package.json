@@ -1,36 +1,52 @@
 {
-  "name": "sumin-tree",
-  "description": "Tree with filter, map, forEach, toArray, some, every, find, etc.",
-  "version": "1.0.0",
-  "bugs": {
-    "url": "https://github.com/SuminSEED/sumin-tree/issues"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/mocha": "^5.2.5",
-    "chai": "^4.1.2",
-    "mocha": "^5.2.0",
-    "typescript": "^2.9.2"
-  },
-  "homepage": "https://github.com/SuminSEED/sumin-tree#readme",
-  "keywords": [
-    "simple",
-    "tree",
-    "typescript"
-  ],
-  "license": "MIT",
-  "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com//SuminSEED%2Fsumin-tree.git"
-  },
-  "scripts": {
-    "build": "$(npm bin)/tsc -p tsconfig.json",
-    "clean": "rm -rf dist && rm -rf test",
-    "dist-clean": "npm run clean && rm -rf node_modules",
-    "prepare": "npm run build",
-    "start": "$(npm bin)/tsc -w -p tsconfig.json",
-    "test": "$(npm bin)/tsc -p tsconfig.test.json && mocha"
-  }
+    "name": "sumin-tree",
+    "description": "Tree with filter, map, forEach, toArray, some, every, find, etc.",
+    "version": "1.0.0",
+    "babel": {
+        "presets": [
+            "env"
+        ],
+        "plugins": [
+            [
+                "add-module-exports",
+                {
+                    "addDefaultProperty": true
+                }
+            ]
+        ]
+    },
+    "bugs": {
+        "url": "https://github.com/SuminSEED/sumin-tree/issues"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@types/chai": "^4.1.4",
+        "@types/mocha": "^5.2.5",
+        "babel-cli": "^6.26.0",
+        "babel-plugin-add-module-exports": "^0.3.2",
+        "babel-preset-env": "^1.7.0",
+        "chai": "^4.1.2",
+        "mocha": "^5.2.0",
+        "typescript": "^2.9.2"
+    },
+    "homepage": "https://github.com/SuminSEED/sumin-tree#readme",
+    "keywords": [
+        "simple",
+        "tree",
+        "typescript"
+    ],
+    "license": "MIT",
+    "main": "dist/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com//SuminSEED%2Fsumin-tree.git"
+    },
+    "scripts": {
+        "build": "$(npm bin)/tsc -p tsconfig.json && $(npm bin)/babel dist -d dist",
+        "clean": "rm -rf dist && rm -rf test",
+        "dist-clean": "npm run clean && rm -rf node_modules",
+        "prepare": "npm run build",
+        "start": "$(npm bin)/tsc -w -p tsconfig.json",
+        "test": "$(npm bin)/tsc -p tsconfig.test.json && mocha"
+    }
 }
