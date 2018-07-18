@@ -13,9 +13,9 @@ npm install sumin-tree
 ### Initialize
 ```js
 let treeB = new SuminTree('B').add('D').add('F').add('G');
-let treeC = new SuminTree('C').add('H').asd('I');
+let treeC = new SuminTree('C').add('H').aad('I');
 let tree = new SuminTree('A').add(treeB).add(treeC);
-let _tree = SuminTree.obj2tree = {
+let _tree = SuminTree.obj2tree({
     value: 'A', children: [
         { value: 'B', children: [
             { value: 'D', children: [] },
@@ -27,7 +27,7 @@ let _tree = SuminTree.obj2tree = {
             { value: 'I', children: [] }
         ] }
     ]
-};
+});
 
 // Identical content
 assert.deepEqual(tree, _tree);
