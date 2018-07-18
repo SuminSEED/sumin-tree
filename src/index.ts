@@ -34,7 +34,7 @@ class SuminTree<T> {
         return this;
     }
 
-    public some(callback: (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER): boolean {
+    public some(callback: SuminTree.CALLBACK.SOME<T>, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER): boolean {
         let tree = this.find((value, depth, index, children, parent, root) => {
             return callback(value, depth, index, children, parent, root);
         }, traversal);
@@ -42,7 +42,7 @@ class SuminTree<T> {
         else return false;
     }
 
-    public every(callback: (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
+    public every(callback: SuminTree.CALLBACK.EVERY<T>, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
         let tree = this.find((value, depth, index, children, parent, root) => {
             return !callback(value, depth, index, children, parent, root);
         }, traversal);
@@ -50,7 +50,7 @@ class SuminTree<T> {
         else return true;
     }
 
-    public traversal(callback: (tree: SuminTree<T>, depth: number, index: number, parent: SuminTree<T> | null, root: SuminTree<T>) => number | void, traversal: SuminTree.TRAVERSAL_TYPE) {
+    public traversal(callback: SuminTree.CALLBACK.TRAVERSAL<T>, traversal: SuminTree.TRAVERSAL_TYPE) {
 
         let depth = 0;
         let root = this;
@@ -78,7 +78,7 @@ class SuminTree<T> {
         _traversal(this, 0, null);
     }
 
-    public filter(callback: (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any) {
+    public filter(callback: SuminTree.CALLBACK.FILTER<T>) {
         let parents: SuminTree<T>[] = [];
         this.traversal((tree, depth, index, parent, root) => {
             let ret = callback(tree.value, depth, index, tree.children, parent, root);
@@ -92,7 +92,7 @@ class SuminTree<T> {
         return parents[0];
     }
 
-    public find(callback: ((value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any) | T, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
+    public find(callback: SuminTree.CALLBACK.FIND<T> | T, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
         let ret: SuminTree<T> | undefined;
         this.traversal((tree, depth, index, parent, root) => {
             if (typeof callback === 'function') {
@@ -110,7 +110,7 @@ class SuminTree<T> {
         return ret;
     }
 
-    public map(callback: (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => T, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
+    public map(callback: SuminTree.CALLBACK.MAP<T>, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
         let parents: SuminTree<T>[] = [];
         this.traversal((tree, depth, index, parent, root) => {
             let ret = callback(tree.value, depth, index, tree.children, parent, root);
@@ -123,7 +123,7 @@ class SuminTree<T> {
         return parents[0];
     }
 
-    public forEach(callback: (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
+    public forEach(callback: SuminTree.CALLBACK.FOREACH<T>, traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
         this.traversal((tree, depth, index, parent, root) => {
             if (!callback(tree.value, index, depth, tree.children, parent, root)) return -1;
         }, traversal);
@@ -131,7 +131,7 @@ class SuminTree<T> {
     }
 
     public toArray(traversal = SuminTree.TRAVERSAL_TYPE.PRE_ORDER) {
-        let array: SuminTree.TYPE.ARRAY_ITEM<T>[] = [];
+        let array: SuminTree.ARRAY_ITEM<T>[] = [];
         this.traversal((tree, depth, index, parent, root) => {
             array.push({
                 value: tree.value,
@@ -144,7 +144,7 @@ class SuminTree<T> {
         return array;
     }
 
-    static obj2tree<T>(obj: SuminTree.TYPE.TREE_OBJ<T>) {
+    static obj2tree<T>(obj: SuminTree.TREE_OBJ<T>) {
         let tree = new SuminTree<T>(obj.value);
         for (let i = 0; i < obj.children.length; i++) {
             let child = obj.children[i];
@@ -155,6 +155,17 @@ class SuminTree<T> {
 }
 
 namespace SuminTree {
+    export interface TREE_OBJ<T> {
+        value: T;
+        children: TREE_OBJ<T>[];
+    }
+    export interface ARRAY_ITEM<T> {
+        value: T;
+        depth: number;
+        index: number;
+        children: SuminTree<T>[];
+        parent: SuminTree<T> | null;
+    }
     export enum TRAVERSAL_TYPE {
         PRE_ORDER,
         POST_ORDER
@@ -163,19 +174,28 @@ namespace SuminTree {
         HEAD = 'head',
         TAIL = 'tail'
     }
+    export namespace CALLBACK {
+        export type TRAVERSAL<T> = (tree: SuminTree<T>, depth: number, index: number, parent: SuminTree<T> | null, root: SuminTree<T>) => number | void;
+        export type SOME<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any;
+        export type EVERY<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any;
+        export type FILTER<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any;
+        export type FIND<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => any;
+        export type MAP<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => T;
+        export type FOREACH<T> = (value: T, depth: number, index: number, children: SuminTree<T>[], parent: SuminTree<T> | null, root: SuminTree<T>) => T;
+    }
+    // 互換性のために残してるメジャーバージョンアップの時に消すべし at TYPE
     export namespace TYPE {
-        export class TREE_OBJ<T> {
+        export interface TREE_OBJ<T> {
             value: T;
             children: TREE_OBJ<T>[];
         }
-        export class ARRAY_ITEM<T> {
+        export interface ARRAY_ITEM<T> {
             value: T;
             depth: number;
             index: number;
             children: SuminTree<T>[];
             parent: SuminTree<T> | null;
-        };
+        }
     }
 }
-
 export default SuminTree;

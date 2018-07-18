@@ -13,7 +13,7 @@ npm install sumin-tree
 ### Initialize
 ```js
 let treeB = new SuminTree('B').add('D').add('F').add('G');
-let treeC = new SuminTree('C').add('H').aad('I');
+let treeC = new SuminTree('C').add('H').add('I');
 let tree = new SuminTree('A').add(treeB).add(treeC);
 let _tree = SuminTree.obj2tree({
     value: 'A', children: [
